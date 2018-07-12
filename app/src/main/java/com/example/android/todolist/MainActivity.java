@@ -27,6 +27,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.android.todolist.database.AppDatabase;
+import com.example.android.todolist.database.TaskEntry;
+
+import java.util.List;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
@@ -100,7 +103,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter.setTasks(appDatabase.taskDao().loadAllTasks());
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            final List<TaskEntry> tasks = appDatabase.taskDao().loadAllTasks();
+            runOnUiThread(() -> {
+                mAdapter.setTasks(tasks);
+            });
+        });
     }
 
     @Override
