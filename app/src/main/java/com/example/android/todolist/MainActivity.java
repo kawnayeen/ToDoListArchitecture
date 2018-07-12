@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    int position = viewHolder.getAdapterPosition();
+                    TaskEntry taskEntry = mAdapter.getmTaskEntries().get(position);
+                    appDatabase.taskDao().deleteTask(taskEntry);
+                    retreiveTask();
+                });
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -103,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     protected void onResume() {
         super.onResume();
+        retreiveTask();
+    }
+
+    private void retreiveTask() {
         AppExecutors.getInstance().diskIO().execute(() -> {
             final List<TaskEntry> tasks = appDatabase.taskDao().loadAllTasks();
             runOnUiThread(() -> {

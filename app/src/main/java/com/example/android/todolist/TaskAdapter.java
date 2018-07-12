@@ -101,10 +101,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         priorityCircle.setColor(priorityColor);
     }
 
+    public List<TaskEntry> getmTaskEntries() {
+        return mTaskEntries;
+    }
+
     /*
-    Helper method for selecting the correct priority circle color.
-    P1 = red, P2 = orange, P3 = yellow
-    */
+        Helper method for selecting the correct priority circle color.
+        P1 = red, P2 = orange, P3 = yellow
+        */
     private int getPriorityColor(int priority) {
         int priorityColor = 0;
 
