@@ -70,6 +70,13 @@ public class AddTaskActivity extends AppCompatActivity {
             mButton.setText(R.string.update_button);
             if (mTaskId == DEFAULT_TASK_ID) {
                 // populate the UI
+                mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    TaskEntry task = appDatabase.taskDao().loadTaskById(mTaskId);
+                    runOnUiThread(() -> {
+                        populateUI(task);
+                    });
+                });
             }
         }
     }
@@ -102,7 +109,10 @@ public class AddTaskActivity extends AppCompatActivity {
      * @param task the taskEntry to populate the UI
      */
     private void populateUI(TaskEntry task) {
-
+        if (task == null)
+            return;
+        mEditText.setText(task.getDescription());
+        setPriorityInViews(task.getPriority());
     }
 
     /**
@@ -116,8 +126,13 @@ public class AddTaskActivity extends AppCompatActivity {
         Date date = new Date();
 
         TaskEntry taskEntry = new TaskEntry(description, priority, date);
-        AppExecutors.getInstance().diskIO().execute(()->{
-            appDatabase.taskDao().insertTask(taskEntry);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if (mTaskId == DEFAULT_TASK_ID) {
+                appDatabase.taskDao().insertTask(taskEntry);
+            } else {
+                taskEntry.setId(mTaskId);
+                appDatabase.taskDao().updateTask(taskEntry);
+            }
             finish();
         });
     }
