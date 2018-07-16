@@ -96,23 +96,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
          */
         FloatingActionButton fabButton = findViewById(R.id.fab);
 
-        fabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create a new intent to start an AddTaskActivity
-                Intent addTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
-                startActivity(addTaskIntent);
-            }
+        fabButton.setOnClickListener(view -> {
+            // Create a new intent to start an AddTaskActivity
+            Intent addTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
+            startActivity(addTaskIntent);
         });
 
         appDatabase = AppDatabase.getInstance(getApplicationContext());
         retrieveTask();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     private void retrieveTask() {
