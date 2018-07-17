@@ -7,19 +7,19 @@ import android.support.annotation.NonNull;
 
 import com.example.android.todolist.database.AppDatabase;
 import com.example.android.todolist.database.TaskEntry;
+import com.example.android.todolist.repository.TaskRepository;
 
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
-    private LiveData<List<TaskEntry>> tasks;
+    private TaskRepository taskRepository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        AppDatabase database = AppDatabase.getInstance(this.getApplication());
-        tasks = database.taskDao().loadAllTasks();
+        taskRepository = new TaskRepository(application.getBaseContext());
     }
 
     public LiveData<List<TaskEntry>> getTasks() {
-        return tasks;
+        return taskRepository.getTasks();
     }
 }
