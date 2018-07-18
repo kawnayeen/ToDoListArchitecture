@@ -12,14 +12,14 @@ import com.example.android.todolist.repository.TaskRepository;
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
-    private TaskRepository taskRepository;
+    private LiveData<List<TaskEntry>> taskList;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        taskRepository = new TaskRepository(application.getBaseContext());
+        taskList = new TaskRepository(application.getBaseContext()).getTasks();
     }
 
     public LiveData<List<TaskEntry>> getTasks() {
-        return taskRepository.getTasks();
+        return taskList;
     }
 }

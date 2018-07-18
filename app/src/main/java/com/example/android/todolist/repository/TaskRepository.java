@@ -19,7 +19,11 @@ public class TaskRepository {
         taskDao = AppDatabase.getInstance(context).taskDao();
     }
 
-    public LiveData<List<TaskEntry>> getTasks(){
+    public LiveData<List<TaskEntry>> getTasks() {
         return taskDao.loadAllTasks();
+    }
+
+    public LiveData<TaskEntry> getTask(int taskId) {
+        return taskDao.loadTaskById(taskId);
     }
 }

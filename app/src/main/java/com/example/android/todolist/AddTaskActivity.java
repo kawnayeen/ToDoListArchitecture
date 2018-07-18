@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -76,12 +75,12 @@ public class AddTaskActivity extends AppCompatActivity {
                 // populate the UI
                 mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
 
-                AddTaskViewModelFactory factory = new AddTaskViewModelFactory(appDatabase, mTaskId);
-                final AddTaskViewModel viewModel = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
-                viewModel.getTask().observe(this, new Observer<TaskEntry>() {
+                final AddTaskViewModel viewModel = ViewModelProviders.of(this).get(AddTaskViewModel.class);
+                LiveData<TaskEntry> taskLiveData = viewModel.getTask(mTaskId);
+                taskLiveData.observe(this, new Observer<TaskEntry>() {
                     @Override
                     public void onChanged(@Nullable TaskEntry taskEntry) {
-                        viewModel.getTask().removeObserver(this);
+                        taskLiveData.removeObserver(this);
                         populateUI(taskEntry);
                     }
                 });
@@ -103,12 +102,7 @@ public class AddTaskActivity extends AppCompatActivity {
         mRadioGroup = findViewById(R.id.radioGroup);
 
         mButton = findViewById(R.id.saveButton);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onSaveButtonClicked();
-            }
-        });
+        mButton.setOnClickListener(view -> onSaveButtonClicked());
     }
 
     /**
