@@ -100,7 +100,6 @@ public class AddTaskActivity extends AppCompatActivity {
     private void initViews() {
         mEditText = findViewById(R.id.editTextTaskDescription);
         mRadioGroup = findViewById(R.id.radioGroup);
-
         mButton = findViewById(R.id.saveButton);
         mButton.setOnClickListener(view -> onSaveButtonClicked());
     }
